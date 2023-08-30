@@ -20,14 +20,30 @@ LONG_BREAK_MIN = 20
 
 window = Tk()
 window.title("Pomodoro")
-window.minsize(width=400, height=600)
-window.config(padx=100, pady=50, bg=YELLOW)
+window.minsize(width=500, height=600)
+window.config(padx=100, pady=200, bg=YELLOW)
+
+title_label = Label(text="Timer", fg=GREEN, font=(FONT_NAME, 50, 'bold'))
+title_label.grid(column=1, row=0)
+
 
 canvas = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0)
 tomato_img = PhotoImage(file="tomato.png")
 canvas.create_image(100, 112, image=tomato_img)
 canvas.create_text(100, 102, text='00:00', fill='white', font=(FONT_NAME, 35, 'bold'))
-canvas.pack()
+canvas.grid(column=1, row=1)
+
+def action():
+    pass
 
 
+# calls action when pressed
+button = Button(text="Start", command=action, highlightthickness=0)
+button.grid(column=0, row=2)
+
+button1 = Button(text="Reset", command=action, highlightthickness=0)
+button1.grid(column=2, row=2)
+
+check_marks = Label(text="✅", fg=GREEN, bg=YELLOW)
+check_marks.grid(column=1, row=3)
 window.mainloop()
