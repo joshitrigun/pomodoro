@@ -11,9 +11,20 @@ WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 reps = 0
+timer = None
 
 
 # ---------------------------- TIMER RESET ------------------------------- #
+
+def reset_timer():
+    window.after_cancel(timer)
+    canvas.itemconfig(timer_text, text="00:00")
+    title_label.config(text="Timer")
+    check_marks.config(text="")
+    global reps
+    reps = 0
+
+# ---------------------------- TIMER MECHANISM ------------------------------- #
 def start_timer():
     global reps
     reps += 1
@@ -31,8 +42,6 @@ def start_timer():
         countdown(work_sec)
         title_label.config(text="Work", fg=GREEN)
 
-# ---------------------------- TIMER MECHANISM ------------------------------- #
-
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 def countdown(count):
@@ -42,10 +51,16 @@ def countdown(count):
         count_sec = f"0{count_sec}"
     canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}")
     if count > 0:
-        window.after(1000, countdown, count - 1)
+        global timer
+        timer = window.after(1000, countdown, count - 1)
 
     else:
         start_timer()
+        mark = ""
+        work_sessions = math.floor(reps / 2)
+        for _ in range(work_sessions):
+            mark += "✔️"
+        check_marks.config(text=mark)
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -64,18 +79,13 @@ canvas.create_image(100, 112, image=tomato_img)
 timer_text = canvas.create_text(100, 102, text='00:00', fill='white', font=(FONT_NAME, 35, 'bold'))
 canvas.grid(column=1, row=1)
 
-
-def action():
-    pass
-
-
 # calls action when pressed
 button = Button(text="Start", command=start_timer, highlightthickness=0)
 button.grid(column=0, row=2)
 
-button1 = Button(text="Reset", command=start_timer, highlightthickness=0)
+button1 = Button(text="Reset", command=reset_timer, highlightthickness=0)
 button1.grid(column=2, row=2)
 
-check_marks = Label(text="✅", fg=GREEN, bg=YELLOW)
+check_marks = Label(fg=GREEN, bg=YELLOW)
 check_marks.grid(column=1, row=3)
 window.mainloop()
